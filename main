@@ -1,0 +1,37 @@
+for i in range(len(proxies)):
+    proxy = proxies[i]
+    socks.set_default_proxy(socks.SOCKS5, proxy['IP'], int(proxy['Port']), username=proxy['Username'], password=proxy['Password'])
+    socket.socket = socks.socksocket
+    try:
+        r = requests.get('https://www.google.com', timeout=5)
+        if r.status_code == 200:
+            sheet.update_cell(i + 2, 5, 'Working')
+        else:
+            r = requests.get('https://yandex.com/', timeout=5)
+            if r.status_code == 200:
+                sheet.update_cell(i + 2, 5, 'Working')
+            else:
+                sheet.update_cell(i + 2, 5, 'Not Working')
+    except Exception as e:
+        sheet.update_cell(i+2, 5, 'Not Working')
+# # use the creds.json to authenticate Google Drive API
+# scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
+#          "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
+
+# for i in range(len(proxies)):
+#     proxy = proxies[i]
+#     proxy_http = f"http://{proxy['Username']}:{proxy['Password']}@{proxy['IP']}:{proxy['Port']}"
+#     proxy_https = f"https://{proxy['Username']}:{proxy['Password']}@{proxy['IP']}:{proxy['Port']}"
+#     proxies_dict = {"http": proxy_http, "https": proxy_https}
+#     cell = sheet.cell(i+2, 5)  # Get cell object by its coordinates
+#     try:
+#         r = requests.get('http://example.com', proxies=proxies_dict) # replace with the url you want to check
+#         if r.status_code == 200:
+#             cell.value = 'Working'
+#             cell.color = (0.0, 0.8, 0.0, 1.0)  # light green
+#         else:
+#             cell.value = 'Not Working'
+#             cell.color = (1.0, 0.3, 0.3, 1.0)  # light red
+#     except Exception as e:
+#         cell.value = 'Not Working'
+#         cell.color = (1.0, 0.3, 0.3, 1.0)  # light red
